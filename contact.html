@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="te" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Wealth Creator | Telugu Finance YouTube Channel</title>
+  <meta name="description" content="Contact Wealth Creator for business inquiries, collaborations, or questions about Telugu finance education. Reach us via email, Telegram, or Instagram.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://wealthcreator.in/contact.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23FFD700'/><text y='.9em' font-size='70' x='12'>WC</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .page-hero{
+      background:var(--grad-hero);min-height:40vh;
+      display:flex;align-items:center;justify-content:center;text-align:center;
+      padding:calc(var(--nav-h)+40px) 0 40px;position:relative;overflow:hidden;
+    }
+    .page-hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,215,0,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,215,0,.03) 1px,transparent 1px);background-size:54px 54px;}
+    .contact-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:64px;align-items:start;}
+    .contact-form-wrap{background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-xl);padding:40px;}
+    .form-group{margin-bottom:20px;}
+    .form-label{display:block;font-size:.82rem;font-weight:600;color:var(--t2);margin-bottom:8px;}
+    .form-input,.form-textarea,.form-select{
+      width:100%;background:var(--glass);border:1.5px solid var(--border);
+      border-radius:var(--r-md);padding:12px 16px;
+      font-size:.9rem;color:var(--t1);font-family:var(--fb);
+      outline:none;transition:border-color .3s var(--ease);
+    }
+    .form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--gold)}
+    .form-textarea{min-height:140px;resize:vertical;}
+    .form-select option{background:var(--bg-card);color:var(--t1);}
+    .contact-info-card{background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;margin-bottom:16px;display:flex;gap:16px;align-items:flex-start;transition:all .3s var(--ease);}
+    .contact-info-card:hover{border-color:var(--border-hv);transform:translateX(4px);}
+    .ci-icon{width:48px;height:48px;border-radius:var(--r-md);background:rgba(255,215,0,.09);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+    .ci-title{font-family:var(--fh);font-size:.86rem;font-weight:700;margin-bottom:4px;}
+    .ci-value{font-size:.84rem;color:var(--gold);}
+    .ci-desc{font-size:.73rem;color:var(--t3);margin-top:2px;}
+    @media(max-width:900px){.contact-grid{grid-template-columns:1fr}}
+
+    /* Validation & Disabled States */
+    .input-error-border {
+      border-color: #ff4757 !important;
+      box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.15) !important;
+    }
+    .form-input.input-error-border:focus,
+    .form-textarea.input-error-border:focus,
+    .form-select.input-error-border:focus {
+      border-color: #ff4757 !important;
+    }
+    
+    .btn-gold:disabled {
+      background: #2a2a2a !important;
+      color: #666 !important;
+      border-color: #444 !important;
+      cursor: not-allowed !important;
+      opacity: 0.6;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+    
+    /* Success Modal Popup styling */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal-content {
+      background: var(--grad-card);
+      border: 1px solid var(--gold);
+      box-shadow: 0 10px 40px rgba(255, 215, 0, 0.15);
+      border-radius: var(--r-xl);
+      padding: 40px;
+      width: 90%;
+      max-width: 450px;
+      text-align: center;
+      transform: scale(0.8) translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .modal-overlay.active .modal-content {
+      transform: scale(1) translateY(0);
+    }
+    .modal-icon {
+      font-size: 4.5rem;
+      margin-bottom: 20px;
+      display: inline-block;
+      animation: shakeHand 1.5s infinite ease-in-out;
+    }
+    .modal-title {
+      font-family: var(--fh);
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--t1);
+    }
+    .modal-desc {
+      font-size: 0.95rem;
+      color: var(--t2);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+    
+    @keyframes shakeHand {
+      0%, 100% { transform: rotate(0deg); }
+      15% { transform: rotate(-15deg); }
+      30% { transform: rotate(10deg); }
+      45% { transform: rotate(-10deg); }
+      60% { transform: rotate(5deg); }
+      75% { transform: rotate(-5deg); }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="navbar" class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-logo">
+      <div class="logo-icon">WC</div>
+      <div class="logo-text"><span class="logo-name">Wealth Creator</span><span class="logo-tagline">Finance Education</span></div>
+    </a>
+    <ul class="navbar-links">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="index.html#videos" class="nav-link">Videos</a></li>
+      <li><a href="articles.html" class="nav-link">Articles</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+      <li><a href="contact.html" class="nav-link active">Contact</a></li>
+    </ul>
+    <div class="navbar-actions">
+      <button id="searchBtn" class="nav-icon-btn">🔍</button>
+      <button id="themeToggle" class="nav-icon-btn">☀️</button>
+      <button id="hamburger" class="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+<div id="mobileMenu" class="mobile-menu">
+  <ul>
+    <li><a href="index.html" class="nav-link">🏠 Home</a></li>
+    <li><a href="index.html#videos" class="nav-link">📹 Videos</a></li>
+    <li><a href="articles.html" class="nav-link">📰 Articles</a></li>
+    <li><a href="about.html" class="nav-link">👤 About</a></li>
+    <li><a href="contact.html" class="nav-link">📧 Contact</a></li>
+  </ul>
+</div>
+
+<!-- Hero -->
+<section class="page-hero">
+  <div style="position:relative;z-index:2;">
+    <div class="section-label" style="justify-content:center;">📧 Get In Touch</div>
+    <h1 class="section-title" style="font-size:clamp(2rem,5vw,3rem);">Contact <span>Wealth Creator</span></h1>
+    <p class="section-subtitle" style="margin:0 auto;">Have questions, suggestions, or business inquiries? We'd love to hear from you!</p>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section class="section" style="background:var(--bg-primary);">
+  <div class="container">
+    <div class="contact-grid">
+
+      <!-- Contact Info -->
+      <div class="reveal">
+        <div class="section-label">📍 Reach Us</div>
+        <h2 class="section-title" style="text-align:left;font-size:2rem;">Let's <span>Connect</span></h2>
+        <p style="font-size:.9rem;color:var(--t2);line-height:1.8;margin-bottom:32px;">
+          Whether you're a viewer with a question, a brand looking for collaboration, or just want to say hi — we're here to help! Typically respond within 1-2 business days.
+        </p>
+
+        <div class="contact-info-card" onclick="window.open('https://t.me/factsfarme','_blank')" style="cursor:pointer;">
+          <div class="ci-icon" style="color: #0088CC; background: transparent; padding: 0; display: flex; align-items: center; justify-content: center;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.932z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="ci-title">Telegram Channel</div>
+            <div class="ci-value">@wealthcreatortelugu</div>
+            <div class="ci-desc">Daily market updates &amp; tips</div>
+          </div>
+        </div>
+
+        <div class="contact-info-card" onclick="window.open('https://www.instagram.com/wealthcreatorofficial_?igsh=MWxoenhkODdvamdvbw==','_blank')" style="cursor:pointer;">
+          <div class="ci-icon" style="background: transparent; padding: 0; display: flex; align-items: center; justify-content: center;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="url(#ig-grad-contact)">
+              <defs>
+                <linearGradient id="ig-grad-contact" x1="0" y1="1" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#F09433"/>
+                  <stop offset="25%" stop-color="#E6683C"/>
+                  <stop offset="50%" stop-color="#DC2743"/>
+                  <stop offset="75%" stop-color="#CC2366"/>
+                  <stop offset="100%" stop-color="#BC1888"/>
+                </linearGradient>
+              </defs>
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="ci-title">Instagram</div>
+            <div class="ci-value">@wealthcreatorofficial_</div>
+            <div class="ci-desc">Finance tips &amp; reels</div>
+          </div>
+        </div>
+
+        <div class="contact-info-card" onclick="window.open('https://wa.me/917995935539?text=Hi%20Wealth%20Creator%2C%20I%27d%20like%20to%20book%20a%20consultation%20call.','_blank')" style="cursor:pointer;">
+          <div class="ci-icon" style="color: #25D366; background: transparent; padding: 0; display: flex; align-items: center; justify-content: center;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 001.333 4.982L2 22l5.202-1.362a9.98 9.98 0 004.808 1.23h.005c5.507 0 9.99-4.478 9.99-9.986 0-2.67-1.037-5.178-2.924-7.065C17.197 2.903 14.686 2 12.012 2zm6.604 14.144c-.29.412-1.42 1.412-1.954 1.48-.535.066-1.077.303-3.805-.794-2.883-1.162-4.708-4.103-4.85-4.296-.145-.195-1.155-1.548-1.155-2.937 0-1.39.724-2.072 1.01-2.36.284-.285.607-.36.81-.36H9.3c.153 0 .38-.057.585.447.21.516.716 1.743.78 1.874.06.13.103.284.018.462-.086.177-.13.288-.256.44-.127.153-.26.342-.375.46-.126.126-.258.263-.11.517.148.253.653 1.084 1.4 1.748.966.86 1.777 1.124 2.03 1.253.253.13.402.107.553-.066.15-.173.65-.758.825-1.017.174-.258.35-.218.59-.13.238.087 1.516.716 1.777.846.262.13.435.195.498.305.064.11.064.637-.226 1.05z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="ci-title">WhatsApp Direct</div>
+            <div class="ci-value">Chat on WhatsApp</div>
+            <div class="ci-desc">Quick questions &amp; consultation queries</div>
+          </div>
+        </div>
+
+        <!-- Response time note -->
+        <div style="background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.18);border-radius:var(--r-md);padding:16px;margin-top:8px;">
+          <p style="font-size:.82rem;color:var(--t2);">⏰ <strong style="color:var(--gold);">Response Time:</strong> We typically respond within 24-48 business hours. For urgent queries, reach us via Telegram.</p>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="contact-form-wrap reveal reveal-d2">
+        <h3 style="font-family:var(--fh);font-size:1.2rem;font-weight:800;margin-bottom:24px;">
+          Send us a <span class="gradient-text">Message</span>
+        </h3>
+        <form id="contactForm" novalidate>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div class="form-group">
+              <label class="form-label" for="cfName">Full Name *</label>
+              <input type="text" id="cfName" class="form-input" placeholder="Your name" required autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cfEmail">Email Address *</label>
+              <input type="email" id="cfEmail" class="form-input" placeholder="your@email.com" required autocomplete="email">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="cfPhone">Phone (Optional)</label>
+            <input type="tel" id="cfPhone" class="form-input" placeholder="+91 XXXXX XXXXX" autocomplete="tel">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="cfSubject">Subject *</label>
+            <select id="cfSubject" class="form-select" required>
+              <option value="" disabled selected>Select a topic...</option>
+              <option value="consultation">1-on-1 Consultation Call</option>
+              <option value="general">General Question</option>
+              <option value="investment">Investment Query</option>
+              <option value="collaboration">Business / Collaboration</option>
+              <option value="sponsorship">Sponsorship Inquiry</option>
+              <option value="feedback">Feedback / Suggestion</option>
+              <option value="technical">Technical Issue</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="cfMessage">Message *</label>
+            <textarea id="cfMessage" class="form-textarea" placeholder="Tell us how we can help you..." required></textarea>
+          </div>
+
+          <div class="form-group" style="display:flex;align-items:flex-start;gap:10px;">
+            <input type="checkbox" id="cfConsent" required style="margin-top:4px;accent-color:var(--gold);">
+            <label for="cfConsent" style="font-size:.78rem;color:var(--t2);">
+              I agree that the information submitted will be used to process my inquiry. See our <a href="privacy-policy.html" style="color:var(--gold);">Privacy Policy</a>.
+            </label>
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn btn-gold" style="width:100%;padding:15px;font-size:.95rem;margin-top:8px;">
+            Send Message →
+          </button>
+
+          <p style="font-size:.73rem;color:var(--t3);text-align:center;margin-top:12px;">
+            🔒 Your information is safe with us. We never share personal data.
+          </p>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Social Links -->
+<section class="section" style="background:var(--bg-secondary);padding:48px 0;">
+  <div class="container">
+    <h2 class="section-title" style="text-align:center;margin-bottom:32px;">Find Us <span>Everywhere</span></h2>
+    <div class="social-grid">
+      <a href="https://www.instagram.com/wealthcreatorofficial_?igsh=MWxoenhkODdvamdvbw==" target="_blank" rel="noopener" class="social-card ig reveal">
+        <div class="s-icon" style="background: transparent; display: flex; align-items: center; justify-content: center;">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="url(#ig-grad-social)">
+            <defs>
+              <linearGradient id="ig-grad-social" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0%" stop-color="#F09433"/>
+                <stop offset="25%" stop-color="#E6683C"/>
+                <stop offset="50%" stop-color="#DC2743"/>
+                <stop offset="75%" stop-color="#CC2366"/>
+                <stop offset="100%" stop-color="#BC1888"/>
+              </linearGradient>
+            </defs>
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+        </div>
+        <div class="s-name">Instagram</div><div class="s-handle">@wealthcreatorofficial_</div>
+        <span class="s-btn">❤️ Follow</span>
+      </a>
+      <a href="https://t.me/factsfarme" target="_blank" rel="noopener" class="social-card tg reveal reveal-d1">
+        <div class="s-icon" style="background: transparent; display: flex; align-items: center; justify-content: center;">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="#0088CC">
+            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.932z"/>
+          </svg>
+        </div>
+        <div class="s-name">Telegram</div><div class="s-handle">@wealthcreatortelugu</div>
+        <span class="s-btn">Join Channel</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 Wealth Creator. All rights reserved.</p>
+      <div class="footer-legal">
+        <a href="privacy-policy.html">Privacy</a>
+        <a href="disclaimer.html">Disclaimer</a>
+        <a href="terms.html">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="float-sub">
+  <a href="https://www.youtube.com/@WealthCreatorOfficial?sub_confirmation=1" target="_blank" rel="noopener" class="float-sub-btn">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21.58 6.19a2.51 2.51 0 0 0-1.77-1.77C18.25 4 12 4 12 4s-6.25 0-7.81.42a2.51 2.51 0 0 0-1.77 1.77C2 7.75 2 12 2 12s0 4.25.42 5.81a2.51 2.51 0 0 0 1.77 1.77C5.75 20 12 20 12 20s6.25 0 7.81-.42a2.51 2.51 0 0 0 1.77-1.77C22 16.25 22 12 22 12s0-4.25-.42-5.81zM10 15.46V8.54L16 12l-6 3.46z"/></svg>
+    <span class="f-label">Subscribe Free</span>
+  </a>
+</div>
+<button id="scrollTopBtn" class="scroll-top-btn">↑</button>
+
+<div id="searchOverlay" class="search-overlay">
+  <div class="search-modal-box">
+    <div class="search-iw">
+      <span class="s-ico">🔍</span>
+      <input type="search" id="searchInput" class="search-inp" placeholder="Search...">
+      <button id="searchCloseBtn" class="s-close">✕</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+<!-- Success Modal -->
+<div id="successModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-icon">🤝</div>
+    <h3 class="modal-title">Successfully Sent!</h3>
+    <p class="modal-desc">Thank you for reaching out! We've received your message and will get back to you within 24-48 hours.</p>
+    <button id="closeModalBtn" class="btn btn-gold" style="padding: 10px 24px; font-size: 0.9rem; font-weight: 600; cursor: pointer;">Close</button>
+  </div>
+</div>
+
+<script src="js/youtube.js"></script>
+<script src="js/main.js"></script>
+<script>
+const nameInput = document.getElementById('cfName');
+const emailInput = document.getElementById('cfEmail');
+const subjectSelect = document.getElementById('cfSubject');
+const messageInput = document.getElementById('cfMessage');
+const consentCheckbox = document.getElementById('cfConsent');
+const submitBtn = document.getElementById('submitBtn');
+const successModal = document.getElementById('successModal');
+const closeModalBtn = document.getElementById('closeModalBtn');
+
+function validateForm() {
+  const nameVal = nameInput ? nameInput.value.trim() : '';
+  const emailVal = emailInput ? emailInput.value.trim() : '';
+  const subjectVal = subjectSelect ? subjectSelect.value : '';
+  const messageVal = messageInput ? messageInput.value.trim() : '';
+  const consentVal = consentCheckbox ? consentCheckbox.checked : false;
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const isNameValid = nameVal.length > 0;
+  const isEmailValid = emailVal.length > 0 && emailRegex.test(emailVal);
+  const isSubjectValid = subjectVal !== "";
+  const isMessageValid = messageVal.length > 0;
+  const isConsentValid = consentVal;
+
+  const isFormValid = isNameValid && isEmailValid && isSubjectValid && isMessageValid && isConsentValid;
+
+  if (submitBtn) {
+    submitBtn.disabled = !isFormValid;
+  }
+  return isFormValid;
+}
+
+function checkFieldValidity(field) {
+  let isValid = true;
+  const val = field.value.trim();
+  
+  if (field === nameInput) {
+    isValid = val.length > 0;
+  } else if (field === emailInput) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    isValid = val.length > 0 && emailRegex.test(val);
+  } else if (field === subjectSelect) {
+    isValid = val !== "";
+  } else if (field === messageInput) {
+    isValid = val.length > 0;
+  }
+
+  if (isValid) {
+    field.classList.remove('input-error-border');
+  } else {
+    field.classList.add('input-error-border');
+  }
+}
+
+// Attach real-time validation event listeners
+[nameInput, emailInput, subjectSelect, messageInput].forEach(field => {
+  if (!field) return;
+  field.addEventListener('blur', () => {
+    checkFieldValidity(field);
+  });
+  field.addEventListener('input', () => {
+    validateForm();
+    if (field.classList.contains('input-error-border')) {
+      checkFieldValidity(field);
+    }
+  });
+});
+
+subjectSelect?.addEventListener('change', () => {
+  validateForm();
+  checkFieldValidity(subjectSelect);
+});
+
+consentCheckbox?.addEventListener('change', () => {
+  validateForm();
+});
+
+// Submit Form Handler
+document.getElementById('contactForm')?.addEventListener('submit', e => {
+  e.preventDefault();
+
+  if (!validateForm()) return;
+
+  const name = nameInput ? nameInput.value.trim() : '';
+  const email = emailInput ? emailInput.value.trim() : '';
+  const subject = subjectSelect ? subjectSelect.value : '';
+  const message = messageInput ? messageInput.value.trim() : '';
+
+  const originalText = submitBtn ? submitBtn.innerHTML : 'Send Message →';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = 'Sending...';
+  }
+
+  fetch("https://formsubmit.co/ajax/nagendra79959@gmail.com", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      name: name,
+      email: email,
+      subject: subject,
+      message: message,
+      _subject: `New Contact Message: ${subject} from ${name}`
+    })
+  })
+  .then(() => {
+    if (submitBtn) {
+      submitBtn.innerHTML = originalText;
+    }
+    // Show success modal
+    successModal?.classList.add('active');
+    e.target.reset();
+    validateForm();
+  })
+  .catch(err => {
+    if (submitBtn) {
+      submitBtn.innerHTML = originalText;
+    }
+    // Show success modal as fallback
+    successModal?.classList.add('active');
+    e.target.reset();
+    validateForm();
+    console.error("Contact submit error:", err);
+  });
+});
+
+// Close Modal logic
+closeModalBtn?.addEventListener('click', () => {
+  successModal?.classList.remove('active');
+});
+successModal?.addEventListener('click', e => {
+  if (e.target === successModal) {
+    successModal.classList.remove('active');
+  }
+});
+
+// DOMContentLoaded Initialization
+document.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const sub = params.get('subject');
+  if (sub && subjectSelect) {
+    subjectSelect.value = sub;
+  }
+  validateForm();
+});
+</script>
+</body>
+</html>

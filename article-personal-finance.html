@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="te-IN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Personal Finance Basics Telugu | Budget 50-30-20 Rule | Wealth Creator</title>
+  <meta name="description" content="Personal finance అంటే ఏమిటి? Budget plan ఎలా చేయాలి? 50-30-20 rule, emergency fund, debt management — complete personal finance guide in Telugu by Wealth Creator."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .article-hero{background:linear-gradient(135deg,#020818 0%,#0a1628 50%,#1a0a2e 100%);padding:120px 0 60px;position:relative;overflow:hidden;}
+    .article-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 40%,rgba(255,165,0,.07) 0%,transparent 60%);}
+    .article-breadcrumb{display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--t3);margin-bottom:20px;flex-wrap:wrap;}
+    .article-breadcrumb a{color:var(--gold);text-decoration:none;}
+    .article-category-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,165,0,.1);border:1px solid rgba(255,165,0,.3);border-radius:var(--r-full);padding:6px 16px;font-size:.75rem;font-weight:700;color:#FFA500;margin-bottom:20px;letter-spacing:.5px;}
+    .article-main-title{font-family:var(--fh);font-size:clamp(1.8rem,4vw,3rem);font-weight:900;color:var(--t1);line-height:1.2;margin-bottom:16px;}
+    .article-main-title span{color:#FFA500;}
+    .article-subtitle{font-size:1rem;color:var(--t2);line-height:1.7;max-width:700px;margin-bottom:28px;}
+    .article-meta-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-size:.78rem;color:var(--t3);}
+    .article-body{max-width:900px;margin:0 auto;padding:60px 24px 100px;}
+    .key-box{background:linear-gradient(135deg,rgba(255,165,0,.06),rgba(255,165,0,.02));border:1px solid rgba(255,165,0,.2);border-left:4px solid #FFA500;border-radius:var(--r-lg);padding:28px 32px;margin:36px 0;}
+    .key-box h3{font-family:var(--fh);font-size:1rem;font-weight:800;color:#FFA500;margin-bottom:16px;}
+    .key-box ul{list-style:none;padding:0;margin:0;}
+    .key-box ul li{padding:6px 0;font-size:.9rem;color:var(--t2);display:flex;align-items:flex-start;gap:10px;line-height:1.6;}
+    .key-box ul li::before{content:'👛';flex-shrink:0;}
+    .article-body h2{font-family:var(--fh);font-size:1.5rem;font-weight:800;color:var(--t1);margin:48px 0 16px;display:flex;align-items:center;gap:12px;}
+    .article-body h2::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);}
+    .article-body p{font-size:.95rem;color:var(--t2);line-height:1.85;margin-bottom:18px;}
+    .article-body p strong{color:var(--t1);}
+    .telugu-para{background:rgba(255,255,255,.02);border-left:3px solid rgba(255,165,0,.4);border-radius:0 var(--r-md) var(--r-md) 0;padding:16px 20px;margin:16px 0 24px;font-size:.88rem;color:var(--t3);line-height:1.9;font-style:italic;}
+    .telugu-para::before{content:'🇮🇳 Telugu: ';font-weight:700;color:#FFA500;font-style:normal;font-size:.75rem;display:block;margin-bottom:6px;letter-spacing:.5px;}
+    /* 50-30-20 visual */
+    .budget-visual{background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-xl);padding:36px;margin:36px 0;}
+    .budget-visual h3{font-family:var(--fh);font-size:1rem;color:var(--t1);margin-bottom:28px;text-align:center;}
+    .budget-bars{display:flex;flex-direction:column;gap:16px;}
+    .budget-bar{display:flex;align-items:center;gap:16px;}
+    .budget-bar .bb-label{font-family:var(--fh);font-size:.82rem;font-weight:700;color:var(--t1);width:100px;flex-shrink:0;}
+    .budget-bar .bb-track{flex:1;height:36px;border-radius:6px;background:rgba(255,255,255,.05);overflow:hidden;position:relative;}
+    .budget-bar .bb-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:12px;font-size:.78rem;font-weight:700;color:#fff;}
+    .budget-bar .bb-pct{font-family:var(--fh);font-size:.9rem;font-weight:900;width:48px;text-align:right;flex-shrink:0;}
+    .finance-tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:32px 0;}
+    .finance-tip{background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;text-align:center;transition:all var(--dur) var(--ease);}
+    .finance-tip:hover{transform:translateY(-4px);border-color:var(--border-hv);}
+    .finance-tip .ft-icon{font-size:2rem;margin-bottom:10px;}
+    .finance-tip .ft-title{font-family:var(--fh);font-size:.88rem;font-weight:700;color:var(--t1);margin-bottom:6px;}
+    .finance-tip .ft-desc{font-size:.76rem;color:var(--t3);line-height:1.5;}
+    .steps{display:flex;flex-direction:column;gap:16px;margin:24px 0;}
+    .step{display:flex;gap:18px;align-items:flex-start;background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;}
+    .step-num{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#FFA500,#cc8400);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-weight:900;font-size:.9rem;color:#000;}
+    .step-body h4{font-family:var(--fh);font-size:.95rem;font-weight:700;color:var(--t1);margin-bottom:4px;}
+    .step-body p{font-size:.84rem;color:var(--t2);margin:0;line-height:1.6;}
+    .tip-box{background:rgba(0,214,143,.05);border:1px solid rgba(0,214,143,.2);border-radius:var(--r-lg);padding:20px 24px;margin:24px 0;}
+    .tip-box strong{color:#00D68F;display:block;margin-bottom:6px;font-size:.85rem;}
+    .tip-box p{font-size:.86rem;color:var(--t2);margin:0;line-height:1.7;}
+    .warn-box{background:rgba(255,107,122,.05);border:1px solid rgba(255,107,122,.2);border-radius:var(--r-lg);padding:20px 24px;margin:24px 0;}
+    .warn-box strong{color:#FF6B7A;display:block;margin-bottom:6px;font-size:.85rem;}
+    .warn-box p{font-size:.86rem;color:var(--t2);margin:0;line-height:1.7;}
+    .article-video{margin:48px 0;background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;}
+    .article-video .av-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+    .article-video .av-header h3{font-family:var(--fh);font-size:.95rem;font-weight:700;color:var(--t1);margin:0;}
+    .article-video .av-badge{background:rgba(255,0,0,.15);border:1px solid rgba(255,0,0,.3);color:#FF6B7A;border-radius:var(--r-full);padding:3px 10px;font-size:.7rem;font-weight:700;}
+    .yt-cta-block{display:flex;align-items:center;gap:20px;padding:28px 24px;flex-wrap:wrap;}
+    .yt-cta-icon{width:60px;height:60px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#FF0000,#CC0000);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:#fff;box-shadow:0 8px 24px rgba(255,0,0,.35);}
+    .yt-cta-text{flex:1;min-width:180px;}
+    .yt-cta-text strong{display:block;font-family:var(--fh);font-size:.9rem;font-weight:700;color:var(--t1);margin-bottom:4px;}
+    .yt-cta-text span{font-size:.8rem;color:var(--t3);line-height:1.5;}
+    .yt-cta-btn{flex-shrink:0;white-space:nowrap;}
+    .further-reading{background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-xl);padding:32px;margin:48px 0;}
+    .further-reading h3{font-family:var(--fh);font-size:1rem;font-weight:800;color:var(--t1);margin-bottom:20px;}
+    .fr-links{display:flex;flex-direction:column;gap:10px;}
+    .fr-link{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--r-md);text-decoration:none;color:var(--t2);font-size:.86rem;transition:all .2s;}
+    .fr-link:hover{border-color:#FFA500;color:var(--t1);}
+    .fr-link .fr-icon{font-size:1.2rem;flex-shrink:0;}
+    .article-cta{background:linear-gradient(135deg,rgba(255,165,0,.08),rgba(255,165,0,.02));border:1px solid rgba(255,165,0,.2);border-radius:var(--r-xl);padding:48px 32px;text-align:center;margin:48px 0;}
+    .article-cta h2{font-family:var(--fh);font-size:1.6rem;font-weight:900;color:var(--t1);margin-bottom:10px;}
+    .article-cta p{color:var(--t2);margin-bottom:24px;font-size:.9rem;}
+    .cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+    .article-nav-bar{background:var(--bg-secondary);border-bottom:1px solid var(--border);padding:12px 0;position:sticky;top:0;z-index:100;}
+    .article-nav-inner{max-width:900px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .back-btn{display:flex;align-items:center;gap:6px;color:var(--t3);font-size:.82rem;text-decoration:none;transition:color .2s;}
+    .back-btn:hover{color:#FFA500;}
+    .progress-bar{flex:1;height:3px;background:var(--border);border-radius:2px;max-width:200px;}
+    .progress-fill{height:100%;background:#FFA500;border-radius:2px;width:0;transition:width .1s;}
+    @media(max-width:600px){.finance-tips{grid-template-columns:1fr 1fr;}
+      .yt-cta-block{flex-direction:column;text-align:center;}
+      .yt-cta-btn{width:100%;text-align:center;justify-content:center;}}
+  </style>
+</head>
+<body>
+<nav class="article-nav-bar">
+  <div class="article-nav-inner">
+    <a href="index.html#articles" class="back-btn">← Back to Articles</a>
+    <div class="progress-bar"><div class="progress-fill" id="readProgress"></div></div>
+    <a href="https://www.youtube.com/@WealthCreatorOfficial" target="_blank" rel="noopener" class="btn btn-yt" style="padding:6px 14px;font-size:.75rem;">📺 Watch on YouTube</a>
+  </div>
+</nav>
+<header class="article-hero">
+  <div class="container">
+    <div class="article-breadcrumb"><a href="index.html">Home</a> › <a href="index.html#articles">Articles</a> › Personal Finance</div>
+    <div class="article-category-badge">👛 Personal Finance</div>
+    <h1 class="article-main-title">Personal Finance Basics<br><span>Budget Manage</span> ఎలా చేయాలి?</h1>
+    <p class="article-subtitle">Personal finance అంటే ఏమిటి? Budget plan ఎలా చేయాలి? 50-30-20 rule, emergency fund, debt management — మీ financial life transform చేయడానికి complete guide.</p>
+    <div class="article-meta-row"><span>📅 May 2026</span><span>⏱️ 6 min read</span><span>📂 Personal Finance</span><span>🇮🇳 English + Telugu</span></div>
+  </div>
+</header>
+<main class="article-body" id="articleBody">
+  <div class="key-box">
+    <h3>👛 Key Takeaways</h3>
+    <ul>
+      <li>50-30-20 rule — salary ని 3 parts గా divide చేయండి: needs, wants, savings</li>
+      <li>Emergency fund — 6 months expenses ని liquid form లో పెట్టండి</li>
+      <li>Debt free అవ్వడం investment కంటే ముందు priority అవ్వాలి</li>
+      <li>Insurance తీసుకోకుండా invest చేయకండి — ఇది biggest financial mistake</li>
+      <li>Automate savings — salary వచ్చిన వెంటనే savings auto-deduct అవ్వాలి</li>
+    </ul>
+  </div>
+
+  <h2>💡 Personal Finance అంటే ఏమిటి?</h2>
+  <p><strong>Personal finance</strong> is simply managing your money — how much you earn, how much you spend, how much you save, and how you invest. It's the foundation of all wealth creation. Without good personal finance habits, even a high salary won't build wealth.</p>
+  <p class="telugu-para">Personal finance అంటే మీ డబ్బు ని ఎలా manage చేయాలో తెలుసుకోవడం. ఎంత earn చేస్తున్నారు, ఎంత spend చేస్తున్నారు, ఎంత save చేస్తున్నారు — ఇవన్నీ track చేసుకోవడం. High salary ఉన్నా personal finance manage చేయకపోతే wealth build అవ్వదు.</p>
+
+  <h2>📊 50-30-20 Budget Rule</h2>
+  <p>The simplest and most powerful budgeting rule ever created. Divide your after-tax salary into 3 parts:</p>
+  <div class="budget-visual">
+    <h3>💰 50-30-20 Rule — Salary Breakdown</h3>
+    <div class="budget-bars">
+      <div class="budget-bar">
+        <div class="bb-label">Needs</div>
+        <div class="bb-track">
+          <div class="bb-fill" style="width:50%;background:linear-gradient(90deg,#3a8aff,#1a6adf);">Rent, Food, Bills, EMI</div>
+        </div>
+        <div class="bb-pct" style="color:#3a8aff;">50%</div>
+      </div>
+      <div class="budget-bar">
+        <div class="bb-label">Wants</div>
+        <div class="bb-track">
+          <div class="bb-fill" style="width:30%;background:linear-gradient(90deg,#FFA500,#cc8400);">Entertainment, Shopping, Dining</div>
+        </div>
+        <div class="bb-pct" style="color:#FFA500;">30%</div>
+      </div>
+      <div class="budget-bar">
+        <div class="bb-label">Savings</div>
+        <div class="bb-track">
+          <div class="bb-fill" style="width:20%;background:linear-gradient(90deg,#00D68F,#008f5e);">Investment, Emergency Fund</div>
+        </div>
+        <div class="bb-pct" style="color:#00D68F;">20%</div>
+      </div>
+    </div>
+  </div>
+  <p class="telugu-para">₹50,000 salary ఉంటే: ₹25,000 Needs కి (rent, food, bills), ₹15,000 Wants కి (entertainment, shopping), ₹10,000 Savings/Investment కి. ఇది start point — జీతం పెరిగే కొద్దీ Savings % పెంచుకోండి.</p>
+
+  <h2>🛡️ Personal Finance Golden Rules</h2>
+  <div class="finance-tips">
+    <div class="finance-tip"><div class="ft-icon">🚨</div><div class="ft-title">Emergency Fund First</div><div class="ft-desc">6 months expenses ని liquid savings లో పెట్టండి. Job loss, health emergency — ఏదైనా handle చేయగలరు.</div></div>
+    <div class="finance-tip"><div class="ft-icon">🛡️</div><div class="ft-title">Insurance Before Investment</div><div class="ft-desc">Term life + Health insurance తీసుకోకుండా invest చేయకండి. ఒక్క medical emergency portfolio destroy చేస్తుంది.</div></div>
+    <div class="finance-tip"><div class="ft-icon">💳</div><div class="ft-title">Debt Destroy చేయండి</div><div class="ft-desc">Credit card, personal loan interest rates 24–36%. ఇవి clear చేయడం 24% guaranteed return ఇచ్చినట్లే.</div></div>
+    <div class="finance-tip"><div class="ft-icon">🤖</div><div class="ft-title">Automate Everything</div><div class="ft-desc">Salary వచ్చిన రోజే SIP, RD auto-debit set చేయండి. "Pay yourself first" principle follow చేయండి.</div></div>
+  </div>
+
+  <h2>🚀 Personal Finance Start చేయడం — Step by Step</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Monthly Income & Expenses Track చేయండి</h4><p>1 month పాటు ప్రతి expense note చేయండి. Google Sheets, Money Manager app use చేయండి. ఎక్కడ waste అవుతుందో తెలుస్తుంది.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Emergency Fund Build చేయండి</h4><p>₹1,000 తో start చేయండి. High-yield savings account లేదా liquid mutual fund లో 6 months expenses వరకు build చేయండి. ఇది priority #1.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><h4>High-Interest Debt Clear చేయండి</h4><p>Credit card debt, personal loans — highest interest rate నుండి clear చేయండి (Avalanche method). Minimum EMI except highest rate loan.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Insurance Get చేయండి</h4><p>Term Life Insurance (10x annual income) + Health Insurance (₹5L minimum family). These protect your financial plan from disasters.</p></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><h4>Invest చేయండి — SIP Start చేయండి</h4><p>Emergency fund ready, insurance done, debt clear — now invest! ₹500 SIP తో start చేయండి. Increase every year.</p></div></div>
+  </div>
+
+  <div class="tip-box">
+    <strong>✅ Most Important: Track your net worth monthly</strong>
+    <p>Net Worth = Assets − Liabilities. ప్రతి నెలా ఇది calculate చేసుకోండి. Growing net worth = financial health improving. Tracking alone motivates you to spend less and save more!</p>
+  </div>
+  <div class="warn-box">
+    <strong>❌ Lifestyle inflation trap</strong>
+    <p>Salary పెరిగే కొద్దీ expenses same pace లో పెంచుకోవడం biggest mistake. "Keeping up with the Joneses" అని English లో అంటారు. Salary 2x అయినప్పుడు savings కూడా 2x అవ్వాలి — expenses కాదు.</p>
+  </div>
+
+  <div class="article-video">
+    <div class="av-header"><span style="font-size:1.4rem;">📺</span><h3>Watch: Personal Finance Basics by Wealth Creator</h3><span class="av-badge">YouTube</span></div>
+    <div class="yt-cta-block">
+      <div class="yt-cta-icon">▶</div>
+      <div class="yt-cta-text">
+        <strong>Telugu లో Personal Finance Guide చూడండి</strong>
+        <span>Budget plan, emergency fund, debt management — simple Telugu లో explain చేసాము</span>
+      </div>
+      <a href="https://www.youtube.com/@WealthCreatorOfficial" target="_blank" rel="noopener" class="btn btn-yt yt-cta-btn">Watch on YouTube →</a>
+    </div>
+  </div>
+
+  <div class="further-reading">
+    <h3>📚 Further Reading</h3>
+    <div class="fr-links">
+      <a href="https://zerodha.com/varsity/module/personalfinance/" target="_blank" rel="noopener" class="fr-link"><span class="fr-icon">📗</span><div><strong>Zerodha Varsity — Personal Finance</strong><br><span style="font-size:.76rem;color:var(--t3);">Complete personal finance education — free</span></div><span style="margin-left:auto;color:var(--t3);">↗</span></a>
+      <a href="article-sip.html" class="fr-link"><span class="fr-icon">💰</span><div><strong>SIP Investment Guide</strong><br><span style="font-size:.76rem;color:var(--t3);">After budgeting, start investing via SIP</span></div><span style="margin-left:auto;color:var(--t3);">→</span></a>
+      <a href="article-govt-schemes.html" class="fr-link"><span class="fr-icon">🏛️</span><div><strong>Government Schemes Guide</strong><br><span style="font-size:.76rem;color:var(--t3);">PPF, NPS, Sukanya — safe investment options</span></div><span style="margin-left:auto;color:var(--t3);">→</span></a>
+    </div>
+  </div>
+  <div class="article-cta">
+    <h2>👛 Start Your Personal Finance Journey!</h2>
+    <p>Watch our Telugu videos on budgeting, saving, and investing — transform your financial life for free!</p>
+    <div class="cta-btns">
+      <a href="https://www.youtube.com/@WealthCreatorOfficial?sub_confirmation=1" target="_blank" rel="noopener" class="btn btn-yt">📺 Subscribe to Wealth Creator</a>
+      <a href="index.html#videos" class="btn btn-gold">▶ Watch Finance Videos</a>
+    </div>
+  </div>
+</main>
+<script>
+  const fill=document.getElementById('readProgress'),body=document.getElementById('articleBody');
+  window.addEventListener('scroll',()=>{const r=body.getBoundingClientRect();fill.style.width=Math.min(100,Math.max(0,(-r.top/(body.offsetHeight-window.innerHeight))*100))+'%';});
+</script>
+</body>
+</html>

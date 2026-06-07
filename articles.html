@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="te-IN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>All Finance Articles Telugu | Wealth Creator Blog</title>
+  <meta name="description" content="Telugu finance articles — SIP, Stock Market, Mutual Funds, Tax Saving, Government Schemes, Personal Finance. Learn investing in simple Telugu by Wealth Creator."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .page-hero{
+      background:linear-gradient(135deg,#020818 0%,#0a1628 50%,#0d1f3c 100%);
+      padding:120px 0 60px;position:relative;overflow:hidden;
+    }
+    .page-hero::before{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse at 50% 50%,rgba(255,215,0,.06) 0%,transparent 60%);
+    }
+    .page-title{
+      font-family:var(--fh);font-size:clamp(2rem,5vw,3.2rem);
+      font-weight:900;color:var(--t1);margin-bottom:12px;
+    }
+    .page-title span{color:var(--gold);}
+    .page-subtitle{font-size:1rem;color:var(--t2);max-width:600px;}
+    .all-articles-section{padding:60px 0 100px;}
+    .all-articles-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:24px;margin-top:40px;
+    }
+    .back-bar{
+      background:var(--bg-secondary);border-bottom:1px solid var(--border);
+      padding:12px 0;position:sticky;top:0;z-index:100;
+    }
+    .back-bar-inner{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+    }
+    .back-btn{
+      display:flex;align-items:center;gap:6px;
+      color:var(--t3);font-size:.82rem;text-decoration:none;transition:color .2s;
+    }
+    .back-btn:hover{color:var(--gold);}
+    @media(max-width:900px){.all-articles-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:580px){.all-articles-grid{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+
+<nav class="back-bar" aria-label="Back navigation">
+  <div class="container back-bar-inner">
+    <a href="index.html#articles" class="back-btn">← Back to Home</a>
+    <a href="https://www.youtube.com/@WealthCreatorOfficial" target="_blank" rel="noopener"
+       class="btn btn-yt" style="padding:6px 14px;font-size:.75rem;">📺 Watch on YouTube</a>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="container">
+    <div class="section-label">📰 Finance Blog</div>
+    <h1 class="page-title">All <span>Articles</span></h1>
+    <p class="page-subtitle">In-depth finance articles in simple English + Telugu — learn investing, tax saving, and wealth creation.</p>
+  </div>
+</header>
+
+<section class="all-articles-section">
+  <div class="container">
+    <div class="all-articles-grid" id="allArticlesGrid">
+      <!-- Rendered by JS below -->
+    </div>
+  </div>
+</section>
+
+<script src="js/youtube.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const grid = document.getElementById('allArticlesGrid');
+    if (!grid || !window.articleData) return;
+
+    grid.innerHTML = window.articleData.map(a => `
+      <article class="article-card reveal"
+               onclick="window.open('${a.url}','_blank')"
+               role="button" tabindex="0"
+               style="cursor:pointer;"
+               aria-label="Read: ${a.title}">
+        <div class="article-img">
+          <img src="${a.img}" alt="${a.title}" loading="lazy"
+               onerror="this.parentElement.style.background='linear-gradient(135deg,#0d1b3e 0%,#090e24 100%)';this.style.display='none'">
+          <span class="a-cat">${a.category}</span>
+        </div>
+        <div class="article-body">
+          <div class="a-date">📅 ${a.date}</div>
+          <h3 class="a-title">${a.title}</h3>
+          <p class="a-excerpt">${a.excerpt}</p>
+          <div class="article-footer">
+            <span class="a-read-time">⏱️ ${a.readTime}</span>
+            <a href="${a.url}" target="_blank" rel="noopener"
+               onclick="event.stopPropagation()"
+               class="btn-readmore">Read More →</a>
+          </div>
+        </div>
+      </article>
+    `).join('');
+
+    // Trigger reveal animations
+    requestAnimationFrame(() => {
+      grid.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    });
+  });
+</script>
+</body>
+</html>
