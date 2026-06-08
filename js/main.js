@@ -6,6 +6,9 @@
 // ── SUBSTACK CONFIGURATION ─────────────────────────────────────────
 window.SUBSTACK_SUBDOMAIN = 'wealthcreatortelugu'; // Change this to your actual Substack subdomain
 
+// ── GOOGLE SHEETS DATABASE CONFIGURATION ───────────────────────────
+window.GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxPwdoC_TJeRRl7AxtqzsD4jnf09DQsPYBl119FMMj0RKqQm2fwBalNL58yBCyvSQfn/exec';
+
 document.addEventListener('DOMContentLoaded', () => {
   // NOTE: Ticker is now handled by js/market.js (live data)
   initNavbar();
@@ -19,6 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initSearch();
   initNewsletter();
   initShareButtons();
+  initSmoothScroll();
+  initScrollSpy();
+  initViewerReviews();
 });
 
 /* ── STOCK TICKER ────────────────────────────────────────────────────
@@ -69,14 +75,23 @@ function initMobileMenu(){
 /* ── DARK / LIGHT THEME ──────────────────────────────────────────── */
 function initTheme(){
   const btn = document.getElementById('themeToggle');
-  const saved = localStorage.getItem('wc-theme') || 'dark';
+  let saved = 'dark';
+  try {
+    saved = localStorage.getItem('wc-theme') || 'dark';
+  } catch (e) {
+    console.warn('[Theme] localStorage is not available, default to dark:', e);
+  }
   applyTheme(saved);
 
   btn?.addEventListener('click',()=>{
     const current = document.documentElement.getAttribute('data-theme');
     const next = current==='dark' ? 'light' : 'dark';
     applyTheme(next);
-    localStorage.setItem('wc-theme', next);
+    try {
+      localStorage.setItem('wc-theme', next);
+    } catch (e) {
+      console.warn('[Theme] localStorage is not available, could not save theme:', e);
+    }
   });
 }
 
@@ -84,6 +99,9 @@ function applyTheme(theme){
   document.documentElement.setAttribute('data-theme', theme);
   const btn = document.getElementById('themeToggle');
   if(btn) btn.textContent = theme==='dark' ? '☀️' : '🌙';
+  if(typeof window.renderTradingViewWidget === 'function') {
+    window.renderTradingViewWidget(theme);
+  }
 }
 
 /* ── SCROLL REVEAL ───────────────────────────────────────────────── */
@@ -290,6 +308,20 @@ function initNewsletter(){
     tempForm.submit();
     document.body.removeChild(tempForm);
 
+    // Save to Google Sheets database
+    if (window.GOOGLE_SHEETS_URL) {
+      fetch(window.GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          formType: 'newsletter',
+          email: em,
+          source: 'Homepage Newsletter'
+        })
+      }).catch(err => console.error('Error saving to Google Sheets:', err));
+    }
+
     showToast('✅ Substack opened! Confirm subscription in the new tab.');
     form.reset();
   });
@@ -346,15 +378,298 @@ function showToast(msg, type = 'success'){
   }, 4000);
 }
 
-/* ── SMOOTH ANCHOR SCROLL ────────────────────────────────────────── */
-document.querySelectorAll('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click', e=>{
-    const id = a.getAttribute('href').slice(1);
-    const el = document.getElementById(id);
-    if(el){
-      e.preventDefault();
-      const offset = document.getElementById('navbar')?.offsetHeight || 80;
-      window.scrollTo({top: el.offsetTop - offset - 10, behavior:'smooth'});
+/* ── SMOOTH ANCHOR SCROLL & HOME REDIRECT OVERRIDE ───────────────── */
+function initSmoothScroll() {
+  const path = window.location.pathname;
+  const isHomepage = path.endsWith('index.html') || path.endsWith('/') || path === '';
+
+  document.querySelectorAll('a').forEach(a => {
+    const href = a.getAttribute('href');
+    if (!href) return;
+
+    if (href.startsWith('#')) {
+      a.addEventListener('click', e => {
+        const id = href.slice(1);
+        const el = document.getElementById(id || 'hero');
+        if (el) {
+          e.preventDefault();
+          const offset = document.getElementById('navbar')?.offsetHeight || 80;
+          window.scrollTo({ top: el.offsetTop - offset - 10, behavior: 'smooth' });
+          
+          // Force active state immediately on click
+          if (isHomepage) {
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            a.classList.add('active');
+          }
+        }
+      });
+    } else if ((href === 'index.html' || href === 'index.html#') && isHomepage) {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Force active state immediately on click
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        const homeLinks = document.querySelectorAll('.nav-link[href="index.html"], .nav-link[href="index.html#"]');
+        homeLinks.forEach(hl => hl.classList.add('active'));
+      });
     }
   });
-});
+}
+
+/* ── SCROLL SPY ACTIVE NAVBAR HIGHLIGHTS ─────────────────────────── */
+function initScrollSpy() {
+  const allNavLinks = document.querySelectorAll('.nav-link');
+  const path = window.location.pathname;
+  const isHomepage = path.endsWith('index.html') || path.endsWith('/') || path === '';
+
+  if (!isHomepage) {
+    allNavLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href && path.includes(href)) {
+        link.classList.add('active');
+      }
+    });
+    return;
+  }
+
+  const sections = [];
+  allNavLinks.forEach(link => {
+    const href = link.getAttribute('href');
+    if (!href) return;
+    
+    let targetEl = null;
+    if (href.startsWith('#')) {
+      targetEl = document.getElementById(href.slice(1));
+    } else if (href.includes('#')) {
+      const hash = href.split('#')[1];
+      targetEl = document.getElementById(hash);
+    }
+    
+    if (!targetEl && (href === 'index.html' || href === 'index.html#')) {
+      targetEl = document.getElementById('hero');
+    }
+    if (!targetEl && href === 'articles.html') {
+      targetEl = document.getElementById('articles');
+    }
+    if (!targetEl && href === 'about.html') {
+      targetEl = document.getElementById('about');
+    }
+
+    if (targetEl) {
+      sections.push({ link, section: targetEl, href });
+    }
+  });
+
+  function updateActiveLink() {
+    let currentActiveHref = null;
+    const scrollPos = window.scrollY + (document.getElementById('navbar')?.offsetHeight || 80) + 150;
+
+    for (let i = 0; i < sections.length; i++) {
+      const { section, href } = sections[i];
+      const top = section.offsetTop;
+      const height = section.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentActiveHref = href;
+      }
+    }
+
+    if (window.scrollY < 100) {
+      currentActiveHref = 'index.html';
+    }
+
+    if (currentActiveHref) {
+      allNavLinks.forEach(l => {
+        const href = l.getAttribute('href');
+        if (href === currentActiveHref || (currentActiveHref === 'index.html' && (href === 'index.html' || href === 'index.html#'))) {
+          l.classList.add('active');
+        } else {
+          l.classList.remove('active');
+        }
+      });
+    }
+  }
+
+  window.addEventListener('scroll', updateActiveLink, { passive: true });
+  updateActiveLink();
+}
+
+/* ── VIEWER REVIEWS & TESTIMONIALS SUBMISSION ──────────────────── */
+function initViewerReviews() {
+  const openBtn = document.getElementById('openReviewBtn');
+  const closeBtn = document.getElementById('closeReviewBtn');
+  const modal = document.getElementById('reviewModal');
+  const form = document.getElementById('reviewForm');
+  const starContainer = document.getElementById('starRating');
+  const ratingInput = document.getElementById('revRating');
+  
+  if (!modal) return;
+
+  // 1. Open/Close Modal
+  openBtn?.addEventListener('click', () => {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+
+  const closeModal = () => {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    form?.reset();
+    resetStars();
+  };
+
+  closeBtn?.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => {
+    if (e.target === modal) closeModal();
+  });
+
+  // 2. Star Rating Selection
+  const stars = starContainer ? starContainer.querySelectorAll('span') : [];
+  stars.forEach(star => {
+    star.addEventListener('click', () => {
+      const val = parseInt(star.dataset.value);
+      if (ratingInput) ratingInput.value = val;
+      updateStars(val);
+    });
+  });
+
+  function updateStars(rating) {
+    stars.forEach(s => {
+      const val = parseInt(s.dataset.value);
+      s.classList.toggle('active', val <= rating);
+    });
+  }
+
+  function resetStars() {
+    if (ratingInput) ratingInput.value = '5';
+    updateStars(5);
+  }
+
+  // 3. Form Submission
+  form?.addEventListener('submit', e => {
+    e.preventDefault();
+    
+    const name = document.getElementById('revName')?.value.trim();
+    const loc = document.getElementById('revLoc')?.value.trim();
+    const message = document.getElementById('revMessage')?.value.trim();
+    const rating = ratingInput ? ratingInput.value : '5';
+
+    if (!name || !loc || !message) {
+      showToast('❌ Please fill in all fields!', 'error');
+      return;
+    }
+
+    // Save to Google Sheets database in parallel
+    if (window.GOOGLE_SHEETS_URL) {
+      fetch(window.GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          formType: 'testimonial',
+          name: name,
+          location: loc,
+          message: message,
+          rating: rating
+        })
+      }).catch(err => console.error('Error saving testimonial:', err));
+    }
+
+    // Save to local storage for immediate session display
+    let localReviews = [];
+    try {
+      localReviews = JSON.parse(localStorage.getItem('wc-user-reviews') || '[]');
+    } catch {}
+
+    const newReview = {
+      name,
+      location: loc,
+      text: message,
+      rating: parseInt(rating),
+      avatar: name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2)
+    };
+
+    localReviews.unshift(newReview);
+    if (localReviews.length > 3) {
+      localReviews = localReviews.slice(0, 3);
+    }
+    try {
+      localStorage.setItem('wc-user-reviews', JSON.stringify(localReviews));
+    } catch {}
+
+    // Prepend new review card to grid
+    renderReviewCard(newReview, true);
+
+    showToast('✅ Thank you! Your review has been recorded.');
+    closeModal();
+  });
+
+  // Load existing user reviews from localStorage
+  loadUserReviews();
+}
+
+function renderReviewCard(r, prepend = false) {
+  const grid = document.querySelector('.testimonials-grid');
+  if (!grid) return;
+
+  const card = document.createElement('div');
+  card.className = 'testi-card reveal visible';
+  
+  // Use a unique style color gradient for user avatars based on name length
+  const gradients = [
+    'linear-gradient(135deg,#667eea,#764ba2)',
+    'linear-gradient(135deg,#f093fb,#f5576c)',
+    'linear-gradient(135deg,#4facfe,#00f2fe)',
+    'linear-gradient(135deg,#43e97b,#38f9d7)',
+    'linear-gradient(135deg,#fa709a,#fee140)'
+  ];
+  const grad = gradients[r.name.length % gradients.length];
+  const starsStr = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+
+  card.innerHTML = `
+    <div class="testi-quote-icon">"</div>
+    <p class="testi-text">${r.text}</p>
+    <div class="testi-stars" aria-label="${r.rating} stars">${starsStr}</div>
+    <div class="testi-author">
+      <div class="testi-avatar" style="background:${grad};">${r.avatar || 'U'}</div>
+      <div class="testi-info">
+        <div class="testi-name">${r.name}</div>
+        <div class="testi-location">📍 ${r.location}</div>
+      </div>
+    </div>
+  `;
+
+  if (prepend) {
+    grid.insertBefore(card, grid.firstChild);
+  } else {
+    grid.appendChild(card);
+  }
+
+  limitTestimonialsCount();
+}
+
+function loadUserReviews() {
+  let localReviews = [];
+  try {
+    localReviews = JSON.parse(localStorage.getItem('wc-user-reviews') || '[]');
+  } catch {}
+  if (localReviews.length > 3) {
+    localReviews = localReviews.slice(0, 3);
+    try {
+      localStorage.setItem('wc-user-reviews', JSON.stringify(localReviews));
+    } catch {}
+  }
+  // Prepend in reverse order so the most recent is at the absolute top/first position
+  localReviews.reverse().forEach(r => renderReviewCard(r, true));
+}
+
+function limitTestimonialsCount() {
+  const grid = document.querySelector('.testimonials-grid');
+  if (!grid) return;
+  const cards = grid.querySelectorAll('.testi-card');
+  cards.forEach((card, index) => {
+    if (index >= 3) {
+      card.remove();
+    }
+  });
+}

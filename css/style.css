@@ -1313,3 +1313,101 @@ h1,h2,h3,h4,h5,h6{font-family:var(--fh);line-height:1.2;font-weight:700}
 @media(max-width:600px){
   .testimonials-grid{grid-template-columns:1fr}
 }
+
+/* Review Modal Overlay & Styles */
+.review-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.review-modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.review-modal-content {
+  background: var(--grad-card);
+  border: 1px solid var(--border);
+  box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+  border-radius: var(--r-xl);
+  padding: 32px;
+  width: 90%;
+  max-width: 480px;
+  transform: scale(0.85) translateY(30px);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+}
+.review-modal-overlay.active .review-modal-content {
+  transform: scale(1) translateY(0);
+  border-color: var(--gold);
+  box-shadow: 0 15px 50px rgba(255, 215, 0, 0.12);
+}
+.review-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--t3);
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.review-modal-close:hover {
+  color: var(--gold);
+}
+.review-form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.review-form-label {
+  font-family: var(--fh);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--t1);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.review-form-input, .review-form-textarea {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 12px 16px;
+  color: var(--t1);
+  font-family: inherit;
+  font-size: 0.88rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.review-form-input:focus, .review-form-textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.15);
+  outline: none;
+}
+.star-rating-selector {
+  display: flex;
+  gap: 12px;
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  user-select: none;
+}
+.star-rating-selector span {
+  transition: transform 0.15s, color 0.15s;
+}
+.star-rating-selector span:hover {
+  transform: scale(1.25);
+}
+.star-rating-selector span.active {
+  color: #FFD700;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+

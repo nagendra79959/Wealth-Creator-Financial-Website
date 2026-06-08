@@ -1,299 +1,8 @@
 /* ================================================================
-   WEALTH CREATOR — Live Market Data Module v2.0
-   Multiple API strategies — works even when opened as file://
-   Auto-refreshes every 5 minutes | Smart fallback on failure
+   WEALTH CREATOR — Financial Tips & Market Status Module
+   Updates top ticker with premium financial tips.
+   Manages TradingView widget and live market status.
 ================================================================ */
-
-// ── SYMBOLS ───────────────────────────────────────────────────────
-const MARKET_SYMBOLS = [
-  { sym:'^NSEI',        label:'NIFTY 50',   prefix:'',   heroId:'heroNifty',  decimals:0 },
-  { sym:'^BSESN',       label:'SENSEX',     prefix:'',   heroId:'heroSensex', decimals:0 },
-  { sym:'USDINR=X',     label:'USD/INR',    prefix:'₹',  heroId:'heroUsdInr', decimals:2 },
-  { sym:'GC=F',         label:'GOLD/10g',   prefix:'₹',  heroId:'heroGold',   decimals:0, isGold:true },
-  { sym:'RELIANCE.NS',  label:'RELIANCE',   prefix:'₹',  heroId:null,         decimals:2 },
-  { sym:'HDFCBANK.NS',  label:'HDFC BANK',  prefix:'₹',  heroId:null,         decimals:2 },
-  { sym:'TCS.NS',       label:'TCS',        prefix:'₹',  heroId:null,         decimals:2 },
-  { sym:'INFY.NS',      label:'INFOSYS',    prefix:'₹',  heroId:null,         decimals:2 },
-  { sym:'SBIN.NS',      label:'SBI',        prefix:'₹',  heroId:null,         decimals:2 },
-  { sym:'ICICIBANK.NS', label:'ICICI',      prefix:'₹',  heroId:null,         decimals:2 },
-  { sym:'BAJFINANCE.NS',label:'BAJAJ FIN',  prefix:'₹',  heroId:null,         decimals:2 },
-  { sym:'WIPRO.NS',     label:'WIPRO',      prefix:'₹',  heroId:null,         decimals:2 },
-];
-
-// ── FALLBACK (updated to realistic 2025-26 values) ────────────────
-const FALLBACK = [
-  { sym:'^NSEI',        label:'NIFTY 50',   price:24800, chgPct:0.45,  prefix:'',  decimals:0, heroId:'heroNifty'  },
-  { sym:'^BSESN',       label:'SENSEX',     price:81500, chgPct:0.48,  prefix:'',  decimals:0, heroId:'heroSensex' },
-  { sym:'USDINR=X',     label:'USD/INR',    price:84.50, chgPct:-0.12, prefix:'₹', decimals:2, heroId:'heroUsdInr' },
-  { sym:'GC=F',         label:'GOLD/10g',   price:95200, chgPct:0.80,  prefix:'₹', decimals:0, heroId:'heroGold'   },
-  { sym:'RELIANCE.NS',  label:'RELIANCE',   price:1450,  chgPct:0.65,  prefix:'₹', decimals:2, heroId:null },
-  { sym:'HDFCBANK.NS',  label:'HDFC BANK',  price:1780,  chgPct:-0.22, prefix:'₹', decimals:2, heroId:null },
-  { sym:'TCS.NS',       label:'TCS',        price:3950,  chgPct:0.55,  prefix:'₹', decimals:2, heroId:null },
-  { sym:'INFY.NS',      label:'INFOSYS',    price:1690,  chgPct:1.10,  prefix:'₹', decimals:2, heroId:null },
-  { sym:'SBIN.NS',      label:'SBI',        price:780,   chgPct:1.30,  prefix:'₹', decimals:2, heroId:null },
-  { sym:'ICICIBANK.NS', label:'ICICI',      price:1320,  chgPct:-0.18, prefix:'₹', decimals:2, heroId:null },
-  { sym:'BAJFINANCE.NS',label:'BAJAJ FIN',  price:8900,  chgPct:0.90,  prefix:'₹', decimals:2, heroId:null },
-  { sym:'WIPRO.NS',     label:'WIPRO',      price:560,   chgPct:0.40,  prefix:'₹', decimals:2, heroId:null },
-];
-
-let usdInrLive = 84.50;
-let isMarketOpen = false;
-
-// ── FORMAT PRICE ──────────────────────────────────────────────────
-function fmtPrice(price, prefix, decimals) {
-  if (!price && price !== 0) return prefix + '---';
-  if (price >= 10000) return prefix + Math.round(price).toLocaleString('en-IN');
-  if (decimals === 0) return prefix + Math.round(price).toLocaleString('en-IN');
-  return prefix + Number(price).toLocaleString('en-IN', {
-    minimumFractionDigits: 2, maximumFractionDigits: 2,
-  });
-}
-
-// ── FETCH WITH TIMEOUT ────────────────────────────────────────────
-async function tFetch(url, ms = 8000) {
-  const ctrl = new AbortController();
-  const tid  = setTimeout(() => ctrl.abort(), ms);
-  try {
-    const r = await fetch(url, { signal: ctrl.signal, mode: 'cors' });
-    clearTimeout(tid);
-    return r;
-  } catch(e) { clearTimeout(tid); throw e; }
-}
-
-// ── STRATEGY 1 : allorigins ───────────────────────────────────────
-async function tryAllorigins(syms) {
-  const base = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${syms}&fields=regularMarketPrice,regularMarketChange,regularMarketChangePercent,marketState`;
-  const url  = `https://api.allorigins.win/get?url=${encodeURIComponent(base)}`;
-  const res  = await tFetch(url);
-  if (!res.ok) throw new Error('allorigins not ok');
-  const wrap = await res.json();
-  const data = typeof wrap.contents === 'string' ? JSON.parse(wrap.contents) : wrap.contents;
-  const list = data?.quoteResponse?.result;
-  if (!list?.length) throw new Error('empty');
-  return list;
-}
-
-// ── STRATEGY 2 : corsproxy.io ─────────────────────────────────────
-async function tryCorsproxy(syms) {
-  const base = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${syms}&fields=regularMarketPrice,regularMarketChange,regularMarketChangePercent,marketState`;
-  const url  = `https://corsproxy.io/?${encodeURIComponent(base)}`;
-  const res  = await tFetch(url);
-  if (!res.ok) throw new Error('corsproxy not ok');
-  const data = await res.json();
-  const list = data?.quoteResponse?.result;
-  if (!list?.length) throw new Error('empty');
-  return list;
-}
-
-// ── STRATEGY 3 : thingproxy ──────────────────────────────────────
-async function tryThingproxy(syms) {
-  const base = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${syms}&fields=regularMarketPrice,regularMarketChange,regularMarketChangePercent`;
-  const url  = `https://thingproxy.freeboard.io/fetch/${base}`;
-  const res  = await tFetch(url);
-  if (!res.ok) throw new Error('thingproxy not ok');
-  const data = await res.json();
-  const list = data?.quoteResponse?.result;
-  if (!list?.length) throw new Error('empty');
-  return list;
-}
-
-// ── STRATEGY 4 : Yahoo Finance v8 chart endpoint ──────────────────
-// Fetches one symbol at a time — slower but different endpoint
-async function tryYahooV8Single(sym) {
-  const url = `https://api.allorigins.win/get?url=${encodeURIComponent(
-    `https://query1.finance.yahoo.com/v8/finance/chart/${sym}?interval=1d&range=1d`
-  )}`;
-  const res  = await tFetch(url);
-  if (!res.ok) throw new Error('v8 not ok');
-  const wrap = await res.json();
-  const data = typeof wrap.contents === 'string' ? JSON.parse(wrap.contents) : wrap.contents;
-  const meta = data?.chart?.result?.[0]?.meta;
-  if (!meta) throw new Error('no meta');
-  return {
-    symbol: sym,
-    regularMarketPrice: meta.regularMarketPrice,
-    regularMarketChange: meta.regularMarketPrice - meta.chartPreviousClose,
-    regularMarketChangePercent: ((meta.regularMarketPrice - meta.chartPreviousClose) / meta.chartPreviousClose) * 100,
-    marketState: meta.currentTradingPeriod ? 'REGULAR' : 'CLOSED',
-  };
-}
-
-// ── STRATEGY 5 : Stooq (works without CORS proxy!) ───────────────
-// Stooq returns CSV and allows CORS — great for Indian indices
-async function tryStooq() {
-  const stooqSymbols = {
-    '^NSEI':    '^nsei.in',  // NIFTY 50
-    '^BSESN':   '^bsesn.in', // SENSEX
-    'USDINR=X': 'usd_inr.fx',
-  };
-
-  const results = [];
-  for (const [yahooSym, stooqSym] of Object.entries(stooqSymbols)) {
-    try {
-      const url = `https://stooq.com/q/l/?s=${stooqSym}&f=sd2t2ohlcvn&h&e=csv`;
-      const res = await tFetch(url, 6000);
-      if (!res.ok) continue;
-      const csv = await res.text();
-      const lines = csv.trim().split('\n');
-      if (lines.length < 2) continue;
-      const cols = lines[1].split(',');
-      // CSV: Symbol,Date,Time,Open,High,Low,Close,Volume,Name
-      const close  = parseFloat(cols[6]);
-      const open   = parseFloat(cols[3]);
-      if (isNaN(close)) continue;
-      const chg    = close - open;
-      const chgPct = (chg / open) * 100;
-      results.push({
-        symbol: yahooSym,
-        regularMarketPrice: close,
-        regularMarketChange: chg,
-        regularMarketChangePercent: chgPct,
-        marketState: 'REGULAR',
-      });
-    } catch(_) {}
-  }
-  if (!results.length) throw new Error('stooq empty');
-  return results;
-}
-
-// ── MASTER FETCH: tries all strategies in order ───────────────────
-async function fetchLiveData() {
-  const syms = MARKET_SYMBOLS.map(s => encodeURIComponent(s.sym)).join(',');
-
-  const strategies = [
-    { name: 'AllOrigins',  fn: () => tryAllorigins(syms)  },
-    { name: 'CorsProxy',   fn: () => tryCorsproxy(syms)   },
-    { name: 'ThingProxy',  fn: () => tryThingproxy(syms)  },
-    { name: 'Stooq (CSV)', fn: () => tryStooq()            },
-  ];
-
-  for (const strategy of strategies) {
-    try {
-      console.log(`[Markets] Trying ${strategy.name}...`);
-      const results = await strategy.fn();
-      console.log(`[Markets] ✅ ${strategy.name} succeeded! Got ${results.length} quotes.`);
-      return results;
-    } catch (e) {
-      console.warn(`[Markets] ❌ ${strategy.name} failed:`, e.message);
-    }
-  }
-
-  // All failed — try fetching key symbols one by one via v8 endpoint
-  try {
-    console.log('[Markets] Trying Yahoo v8 individual symbol fetch...');
-    const keySyms = ['^NSEI', '^BSESN', 'USDINR=X', 'GC=F'];
-    const results = await Promise.allSettled(keySyms.map(tryYahooV8Single));
-    const good = results.filter(r => r.status === 'fulfilled').map(r => r.value);
-    if (good.length > 0) {
-      console.log(`[Markets] ✅ v8 partial success: ${good.length} symbols`);
-      return good;
-    }
-  } catch(_) {}
-
-  console.warn('[Markets] ⚠️ All strategies failed — using fallback data');
-  return null;
-}
-
-// ── PROCESS API RESULTS → NORMALIZED ARRAY ────────────────────────
-function processResults(apiResults) {
-  const usdRes = apiResults.find(r => r.symbol === 'USDINR=X');
-  if (usdRes?.regularMarketPrice) usdInrLive = usdRes.regularMarketPrice;
-
-  const nsei = apiResults.find(r => r.symbol === '^NSEI');
-  isMarketOpen = nsei?.marketState === 'REGULAR';
-
-  // Build output: for each configured symbol, try to find API result
-  return MARKET_SYMBOLS.map(cfg => {
-    const r = apiResults.find(res => res.symbol === cfg.sym);
-
-    // If no API data for this symbol, use fallback value for it
-    if (!r) {
-      const fb = FALLBACK.find(f => f.sym === cfg.sym);
-      return fb ? { ...fb } : null;
-    }
-
-    let price  = r.regularMarketPrice;
-    let prefix = cfg.prefix;
-    let decs   = cfg.decimals;
-
-    // Gold: Yahoo gives USD/oz → convert to ₹/10g
-    if (cfg.isGold) {
-      price  = Math.round((price * usdInrLive) / 31.1035 * 10);
-      prefix = '₹';
-      decs   = 0;
-    }
-
-    return {
-      sym:    cfg.sym,
-      label:  cfg.label,
-      price,
-      chgPct: r.regularMarketChangePercent ?? 0,
-      prefix,
-      decimals: decs,
-      heroId: cfg.heroId,
-    };
-  }).filter(Boolean);
-}
-
-// ── RENDER TICKER ─────────────────────────────────────────────────
-function renderTicker(items) {
-  const track = document.getElementById('tickerTrack');
-  if (!track) return;
-  const html = items.map(item => {
-    const up = item.chgPct >= 0;
-    return `<div class="ticker-item">
-      <span class="sym">${item.label}</span>
-      <span class="prc">${fmtPrice(item.price, item.prefix, item.decimals)}</span>
-      <span class="chg ${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(item.chgPct).toFixed(2)}%</span>
-    </div>`;
-  }).join('');
-  track.innerHTML = html + html; // Double → seamless CSS scroll
-}
-
-// ── UPDATE HERO CARD ──────────────────────────────────────────────
-function updateHeroStats(items) {
-  items.forEach(item => {
-    if (!item.heroId) return;
-    const card = document.getElementById(item.heroId);
-    if (!card) return;
-    const valEl = card.querySelector('.hero-stat-val');
-    const chgEl = card.querySelector('.hero-stat-change');
-    const up    = item.chgPct >= 0;
-    const sign  = up ? '+' : '';
-    if (valEl) {
-      valEl.textContent = fmtPrice(item.price, item.prefix, item.decimals);
-      valEl.className   = `hero-stat-val ${up?'up':'down'}`;
-    }
-    if (chgEl) {
-      chgEl.textContent = `${up?'▲':'▼'} ${sign}${item.chgPct.toFixed(2)}%`;
-      chgEl.className   = `hero-stat-change ${up?'up':'down'}`;
-    }
-  });
-}
-
-// ── SET STATUS DOT & TOOLTIP ──────────────────────────────────────
-function setLiveStatus(live) {
-  const dot    = document.querySelector('.live-dot');
-  const liveEl = document.querySelector('.hero-card-live');
-  const now    = new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit', hour12:true});
-  if (dot)    dot.style.background = live ? '#00D68F' : '#FFD700';
-  if (liveEl) liveEl.setAttribute('title',
-    `${live ? '🟢 Live prices' : '🟡 Demo prices (API offline)'} · ${now}`);
-}
-
-// ── LOADING PLACEHOLDER ───────────────────────────────────────────
-function showLoading() {
-  const track = document.getElementById('tickerTrack');
-  if (track && !track.innerHTML.includes('ticker-item')) {
-    const items = Array(6).fill(
-      `<div class="ticker-item">
-        <span class="sym" style="color:var(--gold)">⏳</span>
-        <span class="prc" style="color:var(--t3)">Loading live data...</span>
-      </div>`
-    ).join('');
-    track.innerHTML = items;
-  }
-}
 
 const EDUCATIONAL_TIPS = [
   "📈 SIP Tip: Start early to maximize the power of compounding. Small monthly investments can build huge wealth!",
@@ -317,13 +26,11 @@ function checkIndianMarketOpen() {
     const hr = parseInt(dict.hour, 10);
     const min = parseInt(dict.minute, 10);
     
-    // Weekend check
     if (day === 'Sat' || day === 'Sun') return false;
     
-    // Trading hours: 9:15 AM to 3:30 PM (9:15 to 15:30)
     const currentMins = hr * 60 + min;
-    const openMins = 9 * 60 + 15;
-    const closeMins = 15 * 60 + 30;
+    const openMins = 9 * 60 + 15;     // 9:15 AM
+    const closeMins = 15 * 60 + 30;   // 3:30 PM
     
     return currentMins >= openMins && currentMins <= closeMins;
   } catch (e) {
@@ -351,61 +58,149 @@ function renderEducationalTicker() {
   if (!track) return;
   const html = EDUCATIONAL_TIPS.map(tip => {
     return `<div class="ticker-item" style="max-width: none; margin-right: 50px;">
+      <span class="sym" style="color: var(--gold); font-size: 0.8rem; font-family: var(--fh); font-weight: 700; margin-right: 6px;">WC TIPS</span>
       <span class="prc" style="color: var(--t1); font-weight: 500; white-space: nowrap;">${tip}</span>
     </div>`;
   }).join('');
   track.innerHTML = html + html; // Double for seamless scroll
 }
 
-function updateHeroStatsUnavailable() {
-  const ids = ['heroNifty', 'heroSensex', 'heroGold', 'heroUsdInr'];
-  ids.forEach(id => {
-    const card = document.getElementById(id);
-    if (!card) return;
-    const valEl = card.querySelector('.hero-stat-val');
-    const chgEl = card.querySelector('.hero-stat-change');
-    if (valEl) {
-      valEl.textContent = 'Offline';
-      valEl.className = 'hero-stat-val';
-      valEl.style.color = 'var(--t3)';
-    }
-    if (chgEl) {
-      chgEl.textContent = 'API Offline';
-      chgEl.className = 'hero-stat-change';
-      chgEl.style.color = 'var(--t3)';
-    }
-  });
-}
+let lastRenderedTheme = null;
 
-// ── MAIN UPDATE LOOP ──────────────────────────────────────────────
-async function updateMarketData() {
-  showLoading();
-  updateMarketStatusDisplay();
-  const apiResults = await fetchLiveData();
+// Global function to dynamically load/reload TradingView widget on theme switch
+window.renderTradingViewWidget = function(theme) {
+  const container = document.getElementById('tradingview-widget-container');
+  if (!container) return;
 
-  if (apiResults) {
-    const items = processResults(apiResults);
-    renderTicker(items);
-    updateHeroStats(items);
-    setLiveStatus(true);
-  } else {
-    // API Failed or offline: Do not display hardcoded stock prices!
-    renderEducationalTicker();
-    updateHeroStatsUnavailable();
-    setLiveStatus(false);
+  if (lastRenderedTheme === theme && container.children.length > 0) {
+    console.log('[Market Widget] TradingView widget already rendered for theme:', theme);
+    return;
   }
-}
+
+  console.log('[Market Widget] Rendering TradingView widget for theme:', theme);
+  lastRenderedTheme = theme;
+
+  // Clear previous
+  container.innerHTML = '';
+
+  // Create wrapper with required class
+  const wrapper = document.createElement('div');
+  wrapper.className = 'tradingview-widget-container';
+  wrapper.style.width = '100%';
+  wrapper.style.height = '340px';
+  wrapper.style.position = 'relative';
+
+  // Create widget div with required class
+  const widgetDiv = document.createElement('div');
+  widgetDiv.className = 'tradingview-widget-container__widget';
+  widgetDiv.style.width = '100%';
+  widgetDiv.style.height = '100%';
+  
+  // Add a beautiful fallback UI visible under file:// protocol or if widget script is blocked
+  widgetDiv.innerHTML = `
+    <div class="market-fallback-card" style="
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed rgba(255, 215, 0, 0.2);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      box-sizing: border-box;
+    ">
+      <div style="font-size: 2.2rem; margin-bottom: 12px;">📊</div>
+      <h4 style="font-family: var(--fh); font-size: 0.95rem; color: var(--t1); margin: 0 0 8px 0; font-weight: 700; letter-spacing: 0.5px;">Live Nifty 50 &amp; Sensex</h4>
+      <p style="font-size: 0.76rem; color: var(--t2); line-height: 1.5; max-width: 290px; margin: 0 0 16px 0;">
+        Live interactive charts require a web server connection. Click the button below to view the real-time indexes directly on TradingView!
+      </p>
+      <a href="https://in.tradingview.com/symbols/NSE-NIFTY/" target="_blank" rel="noopener nofollow" style="
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--gold);
+        color: #000;
+        padding: 8px 18px;
+        border-radius: 30px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.25);
+        transition: transform 0.2s, box-shadow 0.2s;
+      " onmouseover="this.style.transform='scale(1.03)';" onmouseout="this.style.transform='none';">
+        📈 View Live Markets
+      </a>
+    </div>
+  `;
+  wrapper.appendChild(widgetDiv);
+
+  // Add a copyright / fallback link under the widget
+  const copyright = document.createElement('div');
+  copyright.className = 'tradingview-widget-copyright';
+  copyright.style.cssText = 'text-align: center; margin-top: 8px; font-size: 0.78rem; font-family: var(--fb);';
+  copyright.innerHTML = `<a href="https://in.tradingview.com/symbols/NSE-NIFTY/" rel="noopener nofollow" target="_blank" style="color: var(--t3); text-decoration: none; font-weight: 500;">Track Nifty 50 & Sensex on TradingView</a>`;
+  wrapper.appendChild(copyright);
+
+  // Append wrapper to container first BEFORE appending the script tag to maintain DOM context
+  container.appendChild(wrapper);
+
+  // Create script tag with config
+  const script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js';
+  script.async = true;
+
+  const config = {
+    "colorTheme": theme === 'light' ? 'light' : 'dark',
+    "dateRange": "12M",
+    "showChart": true,
+    "locale": "en",
+    "largeChartUrl": "",
+    "isTransparent": true,
+    "showSymbolLogo": true,
+    "showFloatingTooltip": false,
+    "width": "100%",
+    "height": "340",
+    "tabs": [
+      {
+        "title": "Markets",
+        "symbols": [
+          {
+            "s": "FOREXCOM:INDIA50",
+            "d": "Nifty 50"
+          },
+          {
+            "s": "BSE:SENSEX",
+            "d": "Sensex"
+          },
+          {
+            "s": "FX_IDC:USDINR",
+            "d": "USD / INR"
+          },
+          {
+            "s": "FX_IDC:XAUINR",
+            "d": "Gold Spot (INR)"
+          }
+        ]
+      }
+    ]
+  };
+
+  script.text = JSON.stringify(config);
+  wrapper.appendChild(script);
+};
 
 // ── INIT ──────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  updateMarketData();
+  renderEducationalTicker();
   updateMarketStatusDisplay();
-  setInterval(updateMarketData, 5 * 60 * 1000);           // refresh every 5 min
-  setInterval(updateMarketStatusDisplay, 60 * 1000);       // check status every minute
-  document.addEventListener('visibilitychange', () => {   // refresh on tab focus
-    if (!document.hidden) {
-      updateMarketData();
-      updateMarketStatusDisplay();
-    }
-  });
+  
+  // Render TradingView widget based on the active theme
+  const activeTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+  window.renderTradingViewWidget(activeTheme);
+  
+  // Keep status updated
+  setInterval(updateMarketStatusDisplay, 60 * 1000);
 });

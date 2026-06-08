@@ -372,8 +372,8 @@
   </div>
 </div>
 
-<script src="js/youtube.js"></script>
-<script src="js/main.js"></script>
+<script src="js/youtube.js?v=1.0.6"></script>
+<script src="js/main.js?v=1.0.6"></script>
 <script>
 const nameInput = document.getElementById('cfName');
 const emailInput = document.getElementById('cfEmail');
@@ -466,6 +466,24 @@ document.getElementById('contactForm')?.addEventListener('submit', e => {
   if (submitBtn) {
     submitBtn.disabled = true;
     submitBtn.innerHTML = 'Sending...';
+  }
+
+  // Save to Google Sheets database in parallel
+  if (window.GOOGLE_SHEETS_URL) {
+    fetch(window.GOOGLE_SHEETS_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        formType: 'contact',
+        name: name,
+        email: email,
+        subject: subject,
+        message: message
+      })
+    }).catch(err => console.error("Google Sheets save error:", err));
   }
 
   fetch("https://formsubmit.co/ajax/nagendra79959@gmail.com", {

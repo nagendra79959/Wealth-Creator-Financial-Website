@@ -198,8 +198,8 @@
 
     <!-- Right: Live Market Card -->
     <div class="hero-right" aria-label="Live market overview">
-      <div class="hero-card">
-        <div class="hero-card-header">
+      <div class="hero-card" style="padding: 20px 20px 12px; min-height: 400px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div class="hero-card-header" style="margin-bottom: 12px; padding-bottom: 12px;">
           <span class="hero-card-title">📈 Market Overview</span>
           <div class="hero-card-live" id="marketLiveTag">
             <div class="live-dot" aria-hidden="true"></div>
@@ -207,49 +207,9 @@
           </div>
         </div>
 
-        <!-- Animated SVG Chart -->
-        <div class="mini-chart" aria-label="Stock market trend chart">
-          <svg width="100%" height="80" viewBox="0 0 380 80" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#FFD700" stop-opacity=".35"/>
-                <stop offset="100%" stop-color="#FFD700" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-            <path class="chart-line"
-                  d="M0,60 L25,55 L50,48 L75,52 L100,40 L130,34 L155,42 L180,28 L210,22 L240,30 L268,16 L295,10 L325,18 L355,12 L380,8"
-                  stroke="#FFD700" stroke-width="2.5" fill="none"/>
-            <path d="M0,60 L25,55 L50,48 L75,52 L100,40 L130,34 L155,42 L180,28 L210,22 L240,30 L268,16 L295,10 L325,18 L355,12 L380,8 L380,80 L0,80 Z"
-                  fill="url(#cg)"/>
-            <!-- Data point dots -->
-            <circle cx="295" cy="10" r="4" fill="#FFD700" opacity=".8"/>
-            <circle cx="380" cy="8"  r="4" fill="#00D68F" opacity=".9">
-              <animate attributeName="r" values="4;6;4" dur="2s" repeatCount="indefinite"/>
-            </circle>
-          </svg>
-        </div>
-
-        <div class="hero-stats-grid">
-          <div class="hero-stat-item" id="heroNifty">
-            <div class="hero-stat-label">NIFTY 50</div>
-            <div class="hero-stat-val up">⏳ --</div>
-            <div class="hero-stat-change up">Loading...</div>
-          </div>
-          <div class="hero-stat-item" id="heroSensex">
-            <div class="hero-stat-label">SENSEX</div>
-            <div class="hero-stat-val up">⏳ --</div>
-            <div class="hero-stat-change up">Loading...</div>
-          </div>
-          <div class="hero-stat-item" id="heroGold">
-            <div class="hero-stat-label">GOLD /10g</div>
-            <div class="hero-stat-val" style="color:var(--gold)">⏳ --</div>
-            <div class="hero-stat-change up">Loading...</div>
-          </div>
-          <div class="hero-stat-item" id="heroUsdInr">
-            <div class="hero-stat-label">USD / INR</div>
-            <div class="hero-stat-val down">⏳ --</div>
-            <div class="hero-stat-change down">Loading...</div>
-          </div>
+        <!-- TradingView Widget Container -->
+        <div id="tradingview-widget-container" style="flex: 1; width: 100%;">
+          <!-- Rendered dynamically by js/market.js -->
         </div>
       </div>
     </div>
@@ -315,22 +275,13 @@
         </div>
       </div>
 
-      <!-- Testimonial 4 -->
-      <div class="testi-card reveal reveal-d4">
-        <div class="testi-quote-icon">"</div>
-        <p class="testi-text">
-          SIP lo ₹5,000 start chesanu ee channel videos chusi. Now after 2 years portfolio is ₹1.8 lakhs! Oka channel chesi life change chesaru bro 🙏
-        </p>
-        <div class="testi-stars" aria-label="5 stars">★★★★★</div>
-        <div class="testi-author">
-          <div class="testi-avatar" style="background:linear-gradient(135deg,#43e97b,#38f9d7);">SN</div>
-          <div class="testi-info">
-            <div class="testi-name">Suresh Naidu</div>
-            <div class="testi-location">📍 Tirupati · First-time Investor</div>
-          </div>
-        </div>
-      </div>
+    </div>
 
+    <!-- Share Feedback Button -->
+    <div style="text-align: center; margin-top: 36px;" class="reveal">
+      <button id="openReviewBtn" class="btn btn-gold" style="padding: 12px 28px; font-size: 0.9rem; font-weight: 700; display: inline-flex; align-items: center; gap: 8px;">
+        ✍️ Share Your Feedback
+      </button>
     </div>
 
     <!-- Bottom trust badge -->
@@ -434,25 +385,6 @@
   </div>
 </section>
 
-<!-- ── NEWSLETTER ─────────────────────────────────────────────────── -->
-<section class="section newsletter-section" id="newsletter" aria-label="Newsletter Subscription">
-  <div class="container">
-    <div class="newsletter-wrapper reveal">
-      <div class="nl-icon" aria-hidden="true">💌</div>
-      <div class="section-label" style="justify-content:center;">📬 Stay Updated</div>
-      <h2 class="section-title">Get Finance Tips <span>Daily</span></h2>
-      <p class="section-subtitle" style="margin:0 auto;">Subscribe and get the latest stock market updates, investment tips, and finance news delivered to your inbox every day.</p>
-
-      <form class="newsletter-form" id="newsletterForm" novalidate aria-label="Newsletter subscription form">
-        <label for="nlEmail" style="display:none">Email address</label>
-        <input type="email" id="nlEmail" class="nl-input" placeholder="Enter your email address..." required autocomplete="email">
-        <button type="submit" class="btn btn-gold">Subscribe Free →</button>
-      </form>
-
-      <p class="nl-note">🔒 No spam, ever. Unsubscribe anytime. Join 10,000+ subscribers.</p>
-    </div>
-  </div>
-</section>
 
 <!-- ── ABOUT CREATOR ──────────────────────────────────────────────── -->
 <section class="section about-section" id="about" aria-label="About Creator">
@@ -816,11 +748,55 @@
   </div>
 </div>
 
+<!-- Review Modal -->
+<div id="reviewModal" class="review-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle">
+  <div class="review-modal-content">
+    <button id="closeReviewBtn" class="review-modal-close" aria-label="Close modal">✕</button>
+    <h3 id="reviewModalTitle" style="font-family:var(--fh);font-size:1.4rem;font-weight:800;color:var(--t1);margin: 0 0 6px 0;display:flex;align-items:center;gap:8px;">
+      ✍️ Share Your Feedback
+    </h3>
+    <p style="font-size:.8rem;color:var(--t2);margin: 0 0 24px 0;line-height:1.4;">Your review helps other viewers discover high-quality finance education in Telugu!</p>
+    
+    <form id="reviewForm" novalidate>
+      <div class="review-form-group">
+        <label class="review-form-label" for="revName">Full Name</label>
+        <input type="text" id="revName" class="review-form-input" placeholder="e.g. Nagendra Madepalli" required>
+      </div>
+      
+      <div class="review-form-group">
+        <label class="review-form-label" for="revLoc">Location &amp; Profession</label>
+        <input type="text" id="revLoc" class="review-form-input" placeholder="e.g. Hyderabad · IT Employee" required>
+      </div>
+
+      <div class="review-form-group">
+        <label class="review-form-label">Your Rating</label>
+        <div id="starRating" class="star-rating-selector" aria-label="Star rating selector (1 to 5)">
+          <span data-value="1" class="active">★</span>
+          <span data-value="2" class="active">★</span>
+          <span data-value="3" class="active">★</span>
+          <span data-value="4" class="active">★</span>
+          <span data-value="5" class="active">★</span>
+        </div>
+        <input type="hidden" id="revRating" value="5">
+      </div>
+
+      <div class="review-form-group">
+        <label class="review-form-label" for="revMessage">Your Message</label>
+        <textarea id="revMessage" class="review-form-textarea" rows="4" placeholder="How has Wealth Creator helped you manage your money or stocks?" required></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;margin-top:8px;padding:12px;">
+        Submit Review →
+      </button>
+    </form>
+  </div>
+</div>
+
 <!-- ── SCRIPTS ────────────────────────────────────────────────────── -->
-<script src="js/youtube.js"></script>
-<script src="js/market.js"></script>
-<script src="js/youtube-api.js"></script>
-<script src="js/main.js"></script>
+<script src="js/youtube.js?v=1.0.6"></script>
+<script src="js/market.js?v=1.0.6"></script>
+<script src="js/youtube-api.js?v=1.0.6"></script>
+<script src="js/main.js?v=1.0.6"></script>
 
 <!-- Footer newsletter -->
 <script>
@@ -862,6 +838,20 @@ document.getElementById('footerNewsletterForm')?.addEventListener('submit',e=>{
   document.body.appendChild(tempForm);
   tempForm.submit();
   document.body.removeChild(tempForm);
+
+  // Save to Google Sheets database
+  if (window.GOOGLE_SHEETS_URL) {
+    fetch(window.GOOGLE_SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        formType: 'newsletter',
+        email: em,
+        source: 'Footer Newsletter'
+      })
+    }).catch(err => console.error('Error saving to Google Sheets:', err));
+  }
 
   showToast('✅ Substack opened! Confirm subscription in the new tab.');
   e.target.reset();
