@@ -167,10 +167,7 @@ window.renderTradingViewWidget = function(theme) {
       {
         "title": "Markets",
         "symbols": [
-          {
-            "s": "NSE:NIFTY",
-            "d": "Nifty 50"
-          },
+
           {
             "s": "BSE:SENSEX",
             "d": "Sensex"
