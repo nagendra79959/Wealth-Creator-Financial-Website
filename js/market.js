@@ -168,7 +168,7 @@ window.renderTradingViewWidget = function(theme) {
         "title": "Markets",
         "symbols": [
           {
-            "s": "CITYINDEX:INDIA50CFD",
+            "s": "NSE:NIFTY",
             "d": "Nifty 50"
           },
           {
